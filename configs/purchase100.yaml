@@ -1,0 +1,32 @@
+# Purchase-100 RMIA demo configuration.
+# Field names mirror the official attack_configs of
+# privacytrustlab/ml_privacy_meter research/2024_rmia so the two can be
+# compared side by side.
+
+run:
+  random_seed: 12345
+  log_dir: exp/purchase100      # where models + logits live
+  out_dir: results/purchase100  # where attack results are written
+
+data:
+  data_dir: data/purchase100    # x_train.npy / y_train.npy
+  dataset: purchase100
+  dataset_size: 50000
+
+train:
+  num_models: 16        # 1 target + 15 reference models (raise to 64/256 for stronger attacks)
+  epochs: 50            # official setting for Purchase-100
+  batch: 256
+  lr: 0.1
+  arch: mlp             # hidden units [512, 256, 128, 64], as the official scripts
+  pkeep: 0.5            # each model trains on a random 50% of the dataset
+
+audit:
+  target_idx: 0
+  num_ref_models: [1, 2, 4, 8]  # reference budget k (paper Table 2 rows)
+  signal: softmax_relative
+  temperature: 2.0      # temperature on logits for the softmax signal
+  gamma: 2.0            # RMIA likelihood-ratio threshold (Eq. 5)
+  offline_a: 0.2        # p(x) = (1+a)/2 * p_OUT(x) + (1-a)/2 (paper App. B.2.2)
+  proportiontocut: 0.2  # trim_mean cut for p(x), p(z)
+  fix_variance: True    # LiRA variance fixing (Carlini et al.)

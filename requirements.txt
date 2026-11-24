@@ -1,0 +1,11 @@
+torch>=2.0
+torchvision>=0.15
+numpy>=1.24
+scipy>=1.10
+matplotlib>=3.6
+scikit-learn>=1.2
+PyYAML>=6.0
+tqdm
+# optional, to download the Purchase-100 dataset files from the official
+# Google Drive folder with one command:
+gdown
